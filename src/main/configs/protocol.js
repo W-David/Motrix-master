@@ -5,6 +5,6 @@ export default {
   'new-bt-task': 'application:new-bt-task',
   'pause-all-task': 'application:pause-all-task',
   'resume-all-task': 'application:resume-all-task',
-  'preferences': 'application:preferences',
-  'about': 'application:about'
+  preferences: 'application:preferences',
+  about: 'application:about'
 }

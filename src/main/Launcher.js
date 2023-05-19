@@ -5,15 +5,11 @@ import is from 'electron-is'
 import ExceptionHandler from './core/ExceptionHandler'
 import logger from './core/Logger'
 import Application from './Application'
-import {
-  splitArgv,
-  parseArgvAsUrl,
-  parseArgvAsFile
-} from './utils'
+import { splitArgv, parseArgvAsUrl, parseArgvAsFile } from './utils'
 import { EMPTY_STRING } from '@shared/constants'
 
 export default class Launcher extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
     this.url = EMPTY_STRING
     this.file = EMPTY_STRING
@@ -23,7 +19,7 @@ export default class Launcher extends EventEmitter {
     })
   }
 
-  makeSingleInstance (callback) {
+  makeSingleInstance(callback) {
     // Mac App Store Sandboxed App not support requestSingleInstanceLock
     if (is.mas()) {
       callback && callback()
@@ -46,12 +42,10 @@ export default class Launcher extends EventEmitter {
     }
   }
 
-  init () {
+  init() {
     this.exceptionHandler = new ExceptionHandler()
 
-    this.openedAtLogin = is.macOS()
-      ? app.getLoginItemSettings().wasOpenedAtLogin
-      : false
+    this.openedAtLogin = is.macOS() ? app.getLoginItemSettings().wasOpenedAtLogin : false
 
     if (process.argv.length > 1) {
       this.handleAppLaunchArgv(process.argv)
@@ -62,7 +56,7 @@ export default class Launcher extends EventEmitter {
     this.handleAppEvents()
   }
 
-  handleAppEvents () {
+  handleAppEvents() {
     this.handleRendererRemote()
     this.handleOpenUrl()
     this.handleOpenFile()
@@ -71,7 +65,7 @@ export default class Launcher extends EventEmitter {
     this.handleAppWillQuit()
   }
 
-  handleRendererRemote () {
+  handleRendererRemote() {
     app.on('browser-window-created', (_, window) => {
       require('@electron/remote/main').enable(window.webContents)
     })
@@ -83,7 +77,7 @@ export default class Launcher extends EventEmitter {
    * "name": "Motrix Protocol",
    * "schemes": ["mo", "motrix"]
    */
-  handleOpenUrl () {
+  handleOpenUrl() {
     if (is.mas() || !is.macOS()) {
       return
     }
@@ -100,7 +94,7 @@ export default class Launcher extends EventEmitter {
    * Event 'open-file' macOS only
    * handle open torrent file
    */
-  handleOpenFile () {
+  handleOpenFile() {
     if (!is.macOS()) {
       return
     }
@@ -117,7 +111,7 @@ export default class Launcher extends EventEmitter {
    * For Windows, Linux
    * @param {array} argv
    */
-  handleAppLaunchArgv (argv) {
+  handleAppLaunchArgv(argv) {
     logger.info('[Motrix] handleAppLaunchArgv:', argv)
 
     // args: array, extra: map
@@ -141,21 +135,21 @@ export default class Launcher extends EventEmitter {
     }
   }
 
-  sendUrlToApplication () {
+  sendUrlToApplication() {
     if (this.url && global.application && global.application.isReady) {
       global.application.handleProtocol(this.url)
       this.url = EMPTY_STRING
     }
   }
 
-  sendFileToApplication () {
+  sendFileToApplication() {
     if (this.file && global.application && global.application.isReady) {
       global.application.handleFile(this.file)
       this.file = EMPTY_STRING
     }
   }
 
-  handelAppReady () {
+  handelAppReady() {
     app.on('ready', () => {
       global.application = new Application()
 
@@ -179,7 +173,7 @@ export default class Launcher extends EventEmitter {
     })
   }
 
-  handleAppWillQuit () {
+  handleAppWillQuit() {
     app.on('will-quit', () => {
       logger.info('[Motrix] will-quit')
       if (global.application) {

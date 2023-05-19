@@ -2,33 +2,21 @@ import { app } from 'electron'
 import is from 'electron-is'
 import Store from 'electron-store'
 
-import {
-  getDhtPath,
-  getUserDownloadsPath,
-  getMaxConnectionPerServer
-} from '../utils/index'
-import {
-  APP_RUN_MODE,
-  APP_THEME,
-  EMPTY_STRING,
-  IP_VERSION,
-  LOGIN_SETTING_OPTIONS,
-  NGOSANG_TRACKERS_BEST_IP_URL_CDN,
-  NGOSANG_TRACKERS_BEST_URL_CDN
-} from '@shared/constants'
+import { APP_RUN_MODE, APP_THEME, EMPTY_STRING, IP_VERSION, LOGIN_SETTING_OPTIONS, NGOSANG_TRACKERS_BEST_IP_URL_CDN, NGOSANG_TRACKERS_BEST_URL_CDN } from '@shared/constants'
 import { CHROME_UA } from '@shared/ua'
 import { separateConfig } from '@shared/utils'
 import { reduceTrackerString } from '@shared/utils/tracker'
+import { getDhtPath, getMaxConnectionPerServer, getUserDownloadsPath } from '../utils/index'
 
 export default class ConfigManager {
-  constructor () {
+  constructor() {
     this.systemConfig = {}
     this.userConfig = {}
 
     this.init()
   }
 
-  init () {
+  init() {
     this.initSystemConfig()
     this.initUserConfig()
   }
@@ -42,7 +30,7 @@ export default class ConfigManager {
    *
    * @see https://github.com/XIU2/TrackersListCollection
    */
-  initSystemConfig () {
+  initSystemConfig() {
     this.systemConfig = new Store({
       name: 'system',
       /* eslint-disable quote-props */
@@ -55,11 +43,11 @@ export default class ConfigManager {
         'bt-load-saved-metadata': true,
         'bt-save-metadata': true,
         'bt-tracker': EMPTY_STRING,
-        'continue': true,
+        continue: true,
         'dht-file-path': getDhtPath(IP_VERSION.V4),
         'dht-file-path6': getDhtPath(IP_VERSION.V6),
         'dht-listen-port': 26701,
-        'dir': getUserDownloadsPath(),
+        dir: getUserDownloadsPath(),
         'enable-dht6': true,
         'follow-metalink': true,
         'follow-torrent': true,
@@ -71,12 +59,12 @@ export default class ConfigManager {
         'max-overall-upload-limit': 0,
         'no-proxy': EMPTY_STRING,
         'pause-metadata': false,
-        'pause': true,
+        pause: true,
         'rpc-listen-port': 16800,
         'rpc-secret': EMPTY_STRING,
         'seed-ratio': 1,
         'seed-time': 60,
-        'split': getMaxConnectionPerServer(),
+        split: getMaxConnectionPerServer(),
         'user-agent': CHROME_UA
       }
       /* eslint-enable quote-props */
@@ -84,7 +72,7 @@ export default class ConfigManager {
     this.fixSystemConfig()
   }
 
-  initUserConfig () {
+  initUserConfig() {
     this.userConfig = new Store({
       name: 'user',
       // Schema need electron-store upgrade to 3.x.x,
@@ -110,19 +98,16 @@ export default class ConfigManager {
         'keep-window-state': false,
         'last-check-update-time': 0,
         'last-sync-tracker-time': 0,
-        'locale': app.getLocale(),
+        locale: app.getLocale(),
         'new-task-show-downloading': true,
         'no-confirm-before-delete-task': false,
         'open-at-login': false,
-        'protocols': { 'magnet': true, 'thunder': false },
+        protocols: { magnet: true, thunder: false },
         'resume-all-when-app-launched': false,
         'run-mode': APP_RUN_MODE.STANDARD,
         'task-notification': true,
-        'theme': APP_THEME.AUTO,
-        'tracker-source': [
-          NGOSANG_TRACKERS_BEST_IP_URL_CDN,
-          NGOSANG_TRACKERS_BEST_URL_CDN
-        ],
+        theme: APP_THEME.AUTO,
+        'tracker-source': [NGOSANG_TRACKERS_BEST_IP_URL_CDN, NGOSANG_TRACKERS_BEST_URL_CDN],
         'tray-theme': APP_THEME.AUTO,
         'tray-speedometer': is.macOS(),
         'update-channel': 'latest',
@@ -134,7 +119,7 @@ export default class ConfigManager {
     this.fixUserConfig()
   }
 
-  fixSystemConfig () {
+  fixSystemConfig() {
     // Remove aria2c unrecognized options
     const { others } = separateConfig(this.systemConfig.store)
     if (!others) {
@@ -150,7 +135,7 @@ export default class ConfigManager {
     this.setSystemConfig('bt-tracker', tracker)
   }
 
-  fixUserConfig () {
+  fixUserConfig() {
     // Fix the value of open-at-login when the user delete
     // the Motrix self-starting item through startup management.
     const openAtLogin = app.getLoginItemSettings(LOGIN_SETTING_OPTIONS).openAtLogin
@@ -159,44 +144,39 @@ export default class ConfigManager {
     }
 
     if (this.getUserConfig('tracker-source').length === 0) {
-      this.setUserConfig('tracker-source', [
-        NGOSANG_TRACKERS_BEST_IP_URL_CDN,
-        NGOSANG_TRACKERS_BEST_URL_CDN
-      ])
+      this.setUserConfig('tracker-source', [NGOSANG_TRACKERS_BEST_IP_URL_CDN, NGOSANG_TRACKERS_BEST_URL_CDN])
     }
   }
 
-  getSystemConfig (key, defaultValue) {
-    if (typeof key === 'undefined' &&
-        typeof defaultValue === 'undefined') {
+  getSystemConfig(key, defaultValue) {
+    if (typeof key === 'undefined' && typeof defaultValue === 'undefined') {
       return this.systemConfig.store
     }
 
     return this.systemConfig.get(key, defaultValue)
   }
 
-  getUserConfig (key, defaultValue) {
-    if (typeof key === 'undefined' &&
-        typeof defaultValue === 'undefined') {
+  getUserConfig(key, defaultValue) {
+    if (typeof key === 'undefined' && typeof defaultValue === 'undefined') {
       return this.userConfig.store
     }
 
     return this.userConfig.get(key, defaultValue)
   }
 
-  getLocale () {
+  getLocale() {
     return this.getUserConfig('locale') || app.getLocale()
   }
 
-  setSystemConfig (...args) {
+  setSystemConfig(...args) {
     this.systemConfig.set(...args)
   }
 
-  setUserConfig (...args) {
+  setUserConfig(...args) {
     this.userConfig.set(...args)
   }
 
-  reset () {
+  reset() {
     this.systemConfig.clear()
     this.userConfig.clear()
   }

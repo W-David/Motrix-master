@@ -1,16 +1,10 @@
-import is from 'electron-is'
-import { existsSync, writeFile, unlink } from 'fs'
 import { spawn } from 'child_process'
+import is from 'electron-is'
+import { existsSync, unlink, writeFile } from 'fs'
 
-import logger from './Logger'
 import { getI18n } from '../ui/Locale'
-import {
-  getEnginePidPath,
-  getAria2BinPath,
-  getAria2ConfPath,
-  getSessionPath,
-  transformConfig
-} from '../utils/index'
+import { getAria2BinPath, getAria2ConfPath, getEnginePidPath, getSessionPath, transformConfig } from '../utils/index'
+import logger from './Logger'
 
 const { platform, arch } = process
 
@@ -18,7 +12,7 @@ export default class Engine {
   // ChildProcess | null
   static instance = null
 
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.options = options
 
     this.i18n = getI18n()
@@ -26,7 +20,7 @@ export default class Engine {
     this.userConfig = options.userConfig
   }
 
-  start () {
+  start() {
     const pidPath = getEnginePidPath()
     logger.info('[Motrix] Engie pid path:', pidPath)
 
@@ -66,22 +60,22 @@ export default class Engine {
     }
   }
 
-  stop () {
+  stop() {
     if (this.instance) {
       this.instance.kill()
       this.instance = null
     }
   }
 
-  writePidFile (pidPath, pid) {
-    writeFile(pidPath, pid, (err) => {
+  writePidFile(pidPath, pid) {
+    writeFile(pidPath, pid, err => {
       if (err) {
         logger.error(`[Motrix] Write engine process pid failed: ${err}`)
       }
     })
   }
 
-  getEngineBinPath () {
+  getEngineBinPath() {
     const result = getAria2BinPath(platform, arch)
     const binIsExist = existsSync(result)
     if (!binIsExist) {
@@ -92,7 +86,7 @@ export default class Engine {
     return result
   }
 
-  getStartArgs () {
+  getStartArgs() {
     const confPath = getAria2ConfPath(platform, arch)
 
     const sessionPath = getSessionPath()
@@ -120,7 +114,7 @@ export default class Engine {
     return result
   }
 
-  isRunning (pid) {
+  isRunning(pid) {
     try {
       return process.kill(pid, 0)
     } catch (e) {
@@ -128,7 +122,7 @@ export default class Engine {
     }
   }
 
-  restart () {
+  restart() {
     this.stop()
     this.start()
   }

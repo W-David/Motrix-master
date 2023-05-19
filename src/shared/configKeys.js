@@ -154,16 +154,6 @@ const systemKeys = [
   'user-agent'
 ]
 
-const needRestartKeys = [
-  'dht-listen-port',
-  'hide-app-menu',
-  'listen-port',
-  'rpc-listen-port',
-  'rpc-secret'
-]
+const needRestartKeys = ['dht-listen-port', 'hide-app-menu', 'listen-port', 'rpc-listen-port', 'rpc-secret']
 
-export {
-  userKeys,
-  systemKeys,
-  needRestartKeys
-}
+export { userKeys, systemKeys, needRestartKeys }

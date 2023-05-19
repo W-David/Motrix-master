@@ -1,7 +1,7 @@
 export default {
-  'active': 'Se descarcă',
-  'waiting': 'În aşteptare',
-  'stopped': 'Oprite',
+  active: 'Se descarcă',
+  waiting: 'În aşteptare',
+  stopped: 'Oprite',
   'new-task': 'Sarcină Nouă',
   'new-bt-task': 'Sarcină Nouă BT',
   'open-file': 'Deschide fişier Torrent...',
@@ -53,7 +53,8 @@ export default {
   'navigate-to-downloading': 'Mergi la Descărcări',
   'show-advanced-options': 'Opțiuni avansate',
   'copyright-warning': 'Avertisment privind drepturile de autor',
-  'copyright-warning-message': 'Fișierul pe care doriți să îl descărcați poate fi audio sau video cu drepturi de autor, vă rugăm să vă asigurați că aveți permisiunea pentru a-l accesa.',
+  'copyright-warning-message':
+    'Fișierul pe care doriți să îl descărcați poate fi audio sau video cu drepturi de autor, vă rugăm să vă asigurați că aveți permisiunea pentru a-l accesa.',
   'copyright-yes': 'Da, am permisiunea',
   'copyright-no': 'Nu, nu am permisiunea',
   'copyright-error-message': 'Adăugarea sarcinii nu a reușit din cauza problemei drepturilor de autor',

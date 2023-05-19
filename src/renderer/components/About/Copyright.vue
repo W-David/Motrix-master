@@ -1,9 +1,7 @@
 <template>
   <el-row class="copyright">
     <el-col :span="6" class="copyright-left">
-      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/">
-        &copy;{{ year }} Motrix
-      </a>
+      <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/">&copy;{{ year }} Motrix</a>
     </el-col>
     <el-col :span="18" class="copyright-right">
       <a target="_blank" rel="noopener noreferrer" href="https://motrix.app/license">
@@ -23,15 +21,15 @@
 </template>
 
 <script>
-  export default {
-    name: 'mo-copyright',
-    data () {
-      const year = new Date().getFullYear()
-      return {
-        year
-      }
+export default {
+  name: 'mo-copyright',
+  data() {
+    const year = new Date().getFullYear()
+    return {
+      year
     }
   }
+}
 </script>
 
 <style lang="scss">

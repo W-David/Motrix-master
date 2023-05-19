@@ -8,7 +8,7 @@ import protocolMap from '../configs/protocol'
 import { ADD_TASK_TYPE } from '@shared/constants'
 
 export default class ProtocolManager extends EventEmitter {
-  constructor (options = {}) {
+  constructor(options = {}) {
     super()
     this.options = options
 
@@ -23,17 +23,17 @@ export default class ProtocolManager extends EventEmitter {
     this.init()
   }
 
-  init () {
+  init() {
     const { protocols } = this
     this.setup(protocols)
   }
 
-  setup (protocols = {}) {
+  setup(protocols = {}) {
     if (is.dev() || is.mas()) {
       return
     }
 
-    Object.keys(protocols).forEach((protocol) => {
+    Object.keys(protocols).forEach(protocol => {
       const enabled = protocols[protocol]
       if (enabled) {
         if (!app.isDefaultProtocolClient(protocol)) {
@@ -45,7 +45,7 @@ export default class ProtocolManager extends EventEmitter {
     })
   }
 
-  handle (url) {
+  handle(url) {
     logger.info(`[Motrix] protocol url: ${url}`)
 
     if (
@@ -58,15 +58,12 @@ export default class ProtocolManager extends EventEmitter {
       return this.handleResourceProtocol(url)
     }
 
-    if (
-      url.toLowerCase().startsWith('mo:') ||
-      url.toLowerCase().startsWith('motrix:')
-    ) {
+    if (url.toLowerCase().startsWith('mo:') || url.toLowerCase().startsWith('motrix:')) {
       return this.handleMoProtocol(url)
     }
   }
 
-  handleResourceProtocol (url) {
+  handleResourceProtocol(url) {
     if (!url) {
       return
     }
@@ -77,7 +74,7 @@ export default class ProtocolManager extends EventEmitter {
     })
   }
 
-  handleMoProtocol (url) {
+  handleMoProtocol(url) {
     const parsed = new URL(url)
     const { host, search } = parsed
     logger.info('[Motrix] protocol parsed:', parsed, host)

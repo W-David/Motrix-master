@@ -1,20 +1,14 @@
+import { getAria2BinPath, getAria2ConfPath, getEnginePath, getLogPath, getSessionPath } from '../utils'
 import logger from './Logger'
-import {
-  getEnginePath,
-  getAria2BinPath,
-  getAria2ConfPath,
-  getLogPath,
-  getSessionPath
-} from '../utils'
 
 const { platform, arch } = process
 
 export default class Context {
-  constructor () {
+  constructor() {
     this.init()
   }
 
-  init () {
+  init() {
     // The key of Context cannot be the same as that of userConfig and systemConfig.
     this.context = {
       platform: platform,
@@ -29,7 +23,7 @@ export default class Context {
     logger.info('[Motrix] Context.init===>', this.context)
   }
 
-  get (key) {
+  get(key) {
     if (typeof key === 'undefined') {
       return this.context
     }

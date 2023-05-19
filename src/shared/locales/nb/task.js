@@ -1,7 +1,7 @@
 export default {
-  'active': 'Laster ned',
-  'waiting': 'Venter',
-  'stopped': 'Stoppet',
+  active: 'Laster ned',
+  waiting: 'Venter',
+  stopped: 'Stoppet',
   'new-task': 'Ny oppgave',
   'new-bt-task': 'Ny BT-oppgave',
   'open-file': 'Åpne torrentfil...',

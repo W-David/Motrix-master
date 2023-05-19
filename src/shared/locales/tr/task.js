@@ -1,7 +1,7 @@
 export default {
-  'active': 'İndiriliyor',
-  'waiting': 'Bekleniyor',
-  'stopped': 'Durdu',
+  active: 'İndiriliyor',
+  waiting: 'Bekleniyor',
+  stopped: 'Durdu',
   'new-task': 'Yeni Görev',
   'new-bt-task': 'Yeni BT Görevi',
   'open-file': 'Torrent Dosyasını Aç...',

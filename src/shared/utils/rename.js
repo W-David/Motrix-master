@@ -3,14 +3,14 @@ const PLUS = '+'
 const MINUS = '-'
 const OPERATORS = [PLUS, MINUS]
 
-export const getRuleString = (out) => {
+export const getRuleString = out => {
   const rule = out.match(RULE_REGEX)
   const result = rule && rule[1]
 
   return result
 }
 
-export const buildRule = (rule) => {
+export const buildRule = rule => {
   let ruleArr
   let operator = PLUS
   let init = 1

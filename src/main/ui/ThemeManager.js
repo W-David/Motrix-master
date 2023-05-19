@@ -6,24 +6,24 @@ import logger from '../core/Logger'
 import { getSystemTheme } from '../utils'
 
 export default class ThemeManager extends EventEmitter {
-  constructor (options = {}) {
+  constructor(options = {}) {
     super()
 
     this.options = options
     this.init()
   }
 
-  init () {
+  init() {
     this.systemTheme = getSystemTheme()
 
     this.handleEvents()
   }
 
-  getSystemTheme () {
+  getSystemTheme() {
     return this.systemTheme
   }
 
-  handleEvents () {
+  handleEvents() {
     nativeTheme.on('updated', () => {
       const theme = getSystemTheme()
       this.systemTheme = theme
@@ -32,7 +32,7 @@ export default class ThemeManager extends EventEmitter {
     })
   }
 
-  updateSystemTheme (theme) {
+  updateSystemTheme(theme) {
     theme = theme === APP_THEME.AUTO ? 'system' : theme
     nativeTheme.themeSource = theme
   }

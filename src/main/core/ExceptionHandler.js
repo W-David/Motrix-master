@@ -7,7 +7,7 @@ const defaults = {
   showDialog: !is.dev()
 }
 export default class ExceptionHandler {
-  constructor (options) {
+  constructor(options) {
     this.options = {
       ...defaults,
       ...options
@@ -16,12 +16,12 @@ export default class ExceptionHandler {
     this.setup()
   }
 
-  setup () {
+  setup() {
     if (is.dev()) {
       return
     }
     const { showDialog } = this.options
-    process.on('uncaughtException', (err) => {
+    process.on('uncaughtException', err => {
       const { message, stack } = err
       logger.error(`[Motrix] Uncaught exception: ${message}`)
       logger.error(stack)

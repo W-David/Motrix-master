@@ -2,7 +2,7 @@ import i18next from 'i18next'
 import { getLanguage } from '@shared/locales'
 
 export default class LocaleManager {
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.options = options
 
     i18next.init({
@@ -11,16 +11,16 @@ export default class LocaleManager {
     })
   }
 
-  changeLanguage (lng) {
+  changeLanguage(lng) {
     return i18next.changeLanguage(lng)
   }
 
-  changeLanguageByLocale (locale) {
+  changeLanguageByLocale(locale) {
     const lng = getLanguage(locale)
     return this.changeLanguage(lng)
   }
 
-  getI18n () {
+  getI18n() {
     return i18next
   }
 }

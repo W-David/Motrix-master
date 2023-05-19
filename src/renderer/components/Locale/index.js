@@ -5,6 +5,6 @@ const localeManager = new LocaleManager({
   resources
 })
 
-export function getLocaleManager () {
+export function getLocaleManager() {
   return localeManager
 }

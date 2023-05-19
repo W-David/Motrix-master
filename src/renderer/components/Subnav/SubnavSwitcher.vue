@@ -13,29 +13,31 @@
 </template>
 
 <script>
-  export default {
-    name: 'mo-subnav-switcher',
-    props: {
-      title: {
-        type: String
-      },
-      subnavs: {
-        type: Array
-      }
+export default {
+  name: 'mo-subnav-switcher',
+  props: {
+    title: {
+      type: String
     },
-    methods: {
-      handleRoute (route) {
-        this.$router.push({
+    subnavs: {
+      type: Array
+    }
+  },
+  methods: {
+    handleRoute(route) {
+      this.$router
+        .push({
           path: route
-        }).catch(err => {
+        })
+        .catch(err => {
           console.log(err)
         })
-      }
     }
   }
+}
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 .subnav-switch-dropdown {
   background: $--select-dropdown-background;
   & .el-dropdown-menu__item {

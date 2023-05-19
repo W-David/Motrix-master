@@ -3,25 +3,25 @@
 </template>
 
 <script>
-  import { commands } from '@/components/CommandManager/instance'
+import { commands } from '@/components/CommandManager/instance'
 
-  export default {
-    name: 'mo-ipc',
-    methods: {
-      bindIpcEvents () {
-        this.$electron.ipcRenderer.on('command', (event, command, ...args) => {
-          commands.execute(command, ...args)
-        })
-      },
-      unbindIpcEvents () {
-        this.$electron.ipcRenderer.removeAllListeners('command')
-      }
+export default {
+  name: 'mo-ipc',
+  methods: {
+    bindIpcEvents() {
+      this.$electron.ipcRenderer.on('command', (event, command, ...args) => {
+        commands.execute(command, ...args)
+      })
     },
-    created () {
-      this.bindIpcEvents()
-    },
-    destroyed () {
-      this.unbindIpcEvents()
+    unbindIpcEvents() {
+      this.$electron.ipcRenderer.removeAllListeners('command')
     }
+  },
+  created() {
+    this.bindIpcEvents()
+  },
+  destroyed() {
+    this.unbindIpcEvents()
   }
+}
 </script>

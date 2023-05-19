@@ -171,9 +171,7 @@ export const IP_VERSION = {
 
 export const LOGIN_SETTING_OPTIONS = {
   // For Windows
-  args: [
-    '--opened-at-login=1'
-  ]
+  args: ['--opened-at-login=1']
 }
 
 export const TRAY_CANVAS_CONFIG = {
@@ -188,10 +186,7 @@ export const TRAY_CANVAS_CONFIG = {
 export const COMMON_RESOURCE_TAGS = ['http://', 'https://', 'ftp://', 'magnet:']
 export const THUNDER_RESOURCE_TAGS = ['thunder://']
 
-export const RESOURCE_TAGS = [
-  ...COMMON_RESOURCE_TAGS,
-  ...THUNDER_RESOURCE_TAGS
-]
+export const RESOURCE_TAGS = [...COMMON_RESOURCE_TAGS, ...THUNDER_RESOURCE_TAGS]
 
 export const SUPPORT_RTL_LOCALES = [
   /* 'العربية', Arabic */
@@ -214,53 +209,8 @@ export const SUPPORT_RTL_LOCALES = [
   'yi'
 ]
 
-export const IMAGE_SUFFIXES = [
-  '.ai',
-  '.bmp',
-  '.eps',
-  '.gif',
-  '.icn',
-  '.ico',
-  '.jpeg',
-  '.jpg',
-  '.png',
-  '.psd',
-  '.raw',
-  '.sketch',
-  '.svg',
-  '.tif',
-  '.webp',
-  '.xd'
-]
-export const AUDIO_SUFFIXES = [
-  '.aac',
-  '.ape',
-  '.flac',
-  '.flav',
-  '.m4a',
-  '.mp3',
-  '.ogg',
-  '.wav',
-  '.wma'
-]
-export const VIDEO_SUFFIXES = [
-  '.avi',
-  '.m4v',
-  '.mkv',
-  '.mov',
-  '.mp4',
-  '.mpg',
-  '.rmvb',
-  '.vob',
-  '.wmv'
-]
+export const IMAGE_SUFFIXES = ['.ai', '.bmp', '.eps', '.gif', '.icn', '.ico', '.jpeg', '.jpg', '.png', '.psd', '.raw', '.sketch', '.svg', '.tif', '.webp', '.xd']
+export const AUDIO_SUFFIXES = ['.aac', '.ape', '.flac', '.flav', '.m4a', '.mp3', '.ogg', '.wav', '.wma']
+export const VIDEO_SUFFIXES = ['.avi', '.m4v', '.mkv', '.mov', '.mp4', '.mpg', '.rmvb', '.vob', '.wmv']
 
-export const SUB_SUFFIXES = [
-  '.ass',
-  '.idx',
-  '.smi',
-  '.srt',
-  '.ssa',
-  '.sst',
-  '.sub'
-]
+export const SUB_SUFFIXES = ['.ass', '.idx', '.smi', '.srt', '.ssa', '.sst', '.sub']

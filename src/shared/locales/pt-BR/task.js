@@ -1,7 +1,7 @@
 export default {
-  'active': 'Baixando',
-  'waiting': 'Aguardando',
-  'stopped': 'Parou',
+  active: 'Baixando',
+  waiting: 'Aguardando',
+  stopped: 'Parou',
   'new-task': 'Nova Tarefa',
   'new-bt-task': 'Nova Tarefa BT',
   'open-file': 'Abra o arquivo Torrent...',
@@ -53,7 +53,8 @@ export default {
   'navigate-to-downloading': 'Navegar para o Downloading',
   'show-advanced-options': 'Opções Avançadas',
   'copyright-warning': 'Aviso de Copyright',
-  'copyright-warning-message': 'O arquivo que você deseja baixa pode ser protegido por direitos de copyright de áudio ou vídeo, tenha certeza que você possui os direitos de licensa.',
+  'copyright-warning-message':
+    'O arquivo que você deseja baixa pode ser protegido por direitos de copyright de áudio ou vídeo, tenha certeza que você possui os direitos de licensa.',
   'copyright-yes': 'Sim, Eu Tenho',
   'copyright-no': 'Não',
   'copyright-error-message': 'A operação falhou devido os direitos de copyright',

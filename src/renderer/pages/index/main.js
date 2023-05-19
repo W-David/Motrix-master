@@ -18,40 +18,40 @@ import TrayWorker from '@/workers/tray.worker'
 import '@/components/Theme/Index.scss'
 
 const updateTray = is.renderer()
-  ? async (payload) => {
-    const { tray } = payload
-    if (!tray) {
-      return
-    }
+  ? async payload => {
+      const { tray } = payload
+      if (!tray) {
+        return
+      }
 
-    const ab = await tray.arrayBuffer()
-    ipcRenderer.send('command', 'application:update-tray', ab)
-  }
+      const ab = await tray.arrayBuffer()
+      ipcRenderer.send('command', 'application:update-tray', ab)
+    }
   : () => {}
 
-function initTrayWorker () {
+function initTrayWorker() {
   const worker = new TrayWorker()
 
-  worker.addEventListener('message', (event) => {
+  worker.addEventListener('message', event => {
     const { type, payload } = event.data
 
     switch (type) {
-    case 'initialized':
-    case 'log':
-      console.log('[Motrix] Log from Tray Worker: ', payload)
-      break
-    case 'tray:drawed':
-      updateTray(payload)
-      break
-    default:
-      console.warn('[Motrix] Tray Worker unhandled message type:', type, payload)
+      case 'initialized':
+      case 'log':
+        console.log('[Motrix] Log from Tray Worker: ', payload)
+        break
+      case 'tray:drawed':
+        updateTray(payload)
+        break
+      default:
+        console.warn('[Motrix] Tray Worker unhandled message type:', type, payload)
     }
   })
 
   return worker
 }
 
-function init (config) {
+function init(config) {
   if (is.renderer()) {
     Vue.use(require('vue-electron'))
   }
@@ -100,11 +100,12 @@ function init (config) {
   }, 400)
 }
 
-store.dispatch('preference/fetchPreference')
-  .then((config) => {
+store
+  .dispatch('preference/fetchPreference')
+  .then(config => {
     console.info('[Motrix] load preference:', config)
     init(config)
   })
-  .catch((err) => {
+  .catch(err => {
     alert(err)
   })

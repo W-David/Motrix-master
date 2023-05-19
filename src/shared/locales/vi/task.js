@@ -1,7 +1,7 @@
 export default {
-  'active': 'Đang tải về',
-  'waiting': 'Đang chờ',
-  'stopped': 'Ngừng',
+  active: 'Đang tải về',
+  waiting: 'Đang chờ',
+  stopped: 'Ngừng',
   'new-task': 'Tác vụ mới',
   'new-bt-task': 'Tác vụ BT mới',
   'open-file': 'Mở tệp Torrent...',

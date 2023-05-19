@@ -7,16 +7,14 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const { appId } = require('../electron-builder.json')
 const Webpack = require('webpack')
-const TerserPlugin = require('terser-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 let mainConfig = {
   entry: {
     main: path.join(__dirname, '../src/main/index.js')
   },
-  externals: [
-    ...Object.keys(dependencies || {})
-  ],
+  externals: [...Object.keys(dependencies || {})],
   module: {
     rules: [
       {
@@ -57,10 +55,10 @@ let mainConfig = {
     minimize: !devMode,
     minimizer: [
       new TerserPlugin({
-        extractComments: false,
+        extractComments: false
       })
-    ],
-  },
+    ]
+  }
 }
 
 /**
@@ -69,8 +67,8 @@ let mainConfig = {
 if (devMode) {
   mainConfig.plugins.push(
     new Webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
-      'appId': `"${appId}"`
+      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
+      appId: `"${appId}"`
     })
   )
 }
@@ -82,7 +80,7 @@ if (!devMode) {
   mainConfig.plugins.push(
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
-      'appId': `"${appId}"`
+      appId: `"${appId}"`
     })
   )
 }

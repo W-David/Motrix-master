@@ -12,7 +12,7 @@ if (is.dev()) {
 }
 
 export default class UpdateManager extends EventEmitter {
-  constructor (options = {}) {
+  constructor(options = {}) {
     super()
     this.options = options
     this.i18n = getI18n()
@@ -29,7 +29,7 @@ export default class UpdateManager extends EventEmitter {
     this.init()
   }
 
-  init () {
+  init() {
     // Event: error
     // Event: checking-for-update
     // Event: update-available
@@ -51,32 +51,34 @@ export default class UpdateManager extends EventEmitter {
     }
   }
 
-  check () {
+  check() {
     this.autoCheckData.userCheck = true
     this.updater.checkForUpdates()
   }
 
-  checkingForUpdate () {
+  checkingForUpdate() {
     this.isChecking = true
     this.emit('checking')
   }
 
-  updateAvailable (event, info) {
+  updateAvailable(event, info) {
     this.emit('update-available', info)
-    dialog.showMessageBox({
-      type: 'info',
-      title: this.i18n.t('app.check-for-updates-title'),
-      message: this.i18n.t('app.update-available-message'),
-      buttons: [this.i18n.t('app.yes'), this.i18n.t('app.no')],
-      cancelId: 1
-    }).then(({ response }) => {
-      if (response === 0) {
-        this.updater.downloadUpdate()
-      }
-    })
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: this.i18n.t('app.check-for-updates-title'),
+        message: this.i18n.t('app.update-available-message'),
+        buttons: [this.i18n.t('app.yes'), this.i18n.t('app.no')],
+        cancelId: 1
+      })
+      .then(({ response }) => {
+        if (response === 0) {
+          this.updater.downloadUpdate()
+        }
+      })
   }
 
-  updateNotAvailable (event, info) {
+  updateNotAvailable(event, info) {
     this.isChecking = false
     this.emit('update-not-available', info)
     if (this.autoCheckData.userCheck) {
@@ -96,35 +98,35 @@ export default class UpdateManager extends EventEmitter {
    * total,
    * transferred
    */
-  updateDownloadProgress (event) {
+  updateDownloadProgress(event) {
     this.emit('download-progress', event)
   }
 
-  updateDownloaded (event, info) {
+  updateDownloaded(event, info) {
     this.emit('update-downloaded', info)
     this.updater.logger.log(`Update Downloaded: ${info}`)
-    dialog.showMessageBox({
-      title: this.i18n.t('app.check-for-updates-title'),
-      message: this.i18n.t('app.update-downloaded-message')
-    }).then(_ => {
-      this.isChecking = false
-      this.emit('will-updated')
-      setTimeout(() => {
-        this.updater.quitAndInstall()
-      }, 200)
-    })
+    dialog
+      .showMessageBox({
+        title: this.i18n.t('app.check-for-updates-title'),
+        message: this.i18n.t('app.update-downloaded-message')
+      })
+      .then(_ => {
+        this.isChecking = false
+        this.emit('will-updated')
+        setTimeout(() => {
+          this.updater.quitAndInstall()
+        }, 200)
+      })
   }
 
-  updateCancelled () {
+  updateCancelled() {
     this.isChecking = false
   }
 
-  updateError (event, error) {
+  updateError(event, error) {
     this.isChecking = false
     this.emit('update-error', error)
-    const msg = (error == null)
-      ? this.i18n.t('app.update-error-message')
-      : (error.stack || error).toString()
+    const msg = error == null ? this.i18n.t('app.update-error-message') : (error.stack || error).toString()
 
     this.updater.logger.warn(`[Motrix] update-error: ${msg}`)
     dialog.showErrorBox('Error', msg)

@@ -2,29 +2,34 @@ import { isEmpty } from 'lodash'
 import axios from 'axios'
 import { MAX_BT_TRACKER_LENGTH } from '@shared/constants'
 
-export const fetchBtTrackerFromSource = async (source) => {
+export const fetchBtTrackerFromSource = async source => {
   if (isEmpty(source)) {
     return []
   }
 
   const now = Date.now()
-  const promises = source.map((url) => {
-    return axios.get(`${url}?t=${now}`).then((value) => value.data)
+  const promises = source.map(url => {
+    return axios.get(`${url}?t=${now}`).then(value => value.data)
   })
 
   const results = await Promise.allSettled(promises)
-  const values = results.map((item) => item.value)
+  const values = results.map(item => item.value)
   const result = [...new Set(values)]
   return result
 }
 
 export const convertTrackerDataToLine = (arr = []) => {
-  const result = arr.join('\r\n').replace(/^\s*[\r\n]/gm, '').trim()
+  const result = arr
+    .join('\r\n')
+    .replace(/^\s*[\r\n]/gm, '')
+    .trim()
   return result
 }
 
 export const convertTrackerDataToComma = (arr = []) => {
-  const result = convertTrackerDataToLine(arr).replace(/(?:\r\n|\r|\n)/g, ',').trim()
+  const result = convertTrackerDataToLine(arr)
+    .replace(/(?:\r\n|\r|\n)/g, ',')
+    .trim()
   return result
 }
 

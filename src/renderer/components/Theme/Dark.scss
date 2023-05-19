@@ -242,28 +242,28 @@
     }
   }
 
-  .el-popper[x-placement^="top"] .popper__arrow {
+  .el-popper[x-placement^='top'] .popper__arrow {
     border-top-color: #606060;
     &:after {
       border-top-color: #3d3d3d;
     }
   }
 
-  .el-popper[x-placement^="right"] .popper__arrow {
+  .el-popper[x-placement^='right'] .popper__arrow {
     border-right-color: #606060;
     &:after {
       border-right-color: #3d3d3d;
     }
   }
 
-  .el-popper[x-placement^="bottom"] .popper__arrow {
+  .el-popper[x-placement^='bottom'] .popper__arrow {
     border-bottom-color: #606060;
     &:after {
       border-bottom-color: #3d3d3d;
     }
   }
 
-  .el-popper[x-placement^="left"] .popper__arrow {
+  .el-popper[x-placement^='left'] .popper__arrow {
     border-left-color: #606060;
     &:after {
       border-left-color: #3d3d3d;
@@ -371,7 +371,8 @@
       background-color: $--dk-table-th-background;
       color: $--dk-table-text-color;
     }
-    th.is-leaf, td {
+    th.is-leaf,
+    td {
       background-color: $--dk-table-background;
       color: $--dk-table-text-color;
       border-bottom-color: $--dk-table-border-color;
@@ -386,7 +387,9 @@
     background-color: $--dk-table-hover-background;
   }
 
-  .el-table--group::after, .el-table--border::after, .el-table::before {
+  .el-table--group::after,
+  .el-table--border::after,
+  .el-table::before {
     background-color: $--dk-table-border-color;
   }
 
@@ -444,5 +447,4 @@
     background-color: $--dk-popover-background;
     border-color: $--dk-popover-border-color;
   }
-
 }

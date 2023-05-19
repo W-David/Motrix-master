@@ -14,7 +14,7 @@ const initCanvas = () => {
   return new OffscreenCanvas(WIDTH, HEIGHT)
 }
 
-const drawTray = async (payload) => {
+const drawTray = async payload => {
   self.postMessage({
     type: 'log',
     payload
@@ -44,7 +44,7 @@ const drawTray = async (payload) => {
   }
 }
 
-const logger = (text) => {
+const logger = text => {
   self.postMessage({
     type: 'log',
     payload: text
@@ -56,13 +56,13 @@ self.postMessage({
   payload: Date.now()
 })
 
-self.addEventListener('message', (event) => {
+self.addEventListener('message', event => {
   const { type, payload } = event.data
   switch (type) {
-  case 'tray:draw':
-    drawTray(payload)
-    break
-  default:
-    logger(JSON.stringify(event.data))
+    case 'tray:draw':
+      drawTray(payload)
+      break
+    default:
+      logger(JSON.stringify(event.data))
   }
 })

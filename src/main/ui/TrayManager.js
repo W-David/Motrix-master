@@ -6,11 +6,7 @@ import is from 'electron-is'
 import { APP_RUN_MODE, APP_THEME } from '@shared/constants'
 import { getInverseTheme } from '@shared/utils'
 import { getI18n } from './Locale'
-import {
-  translateTemplate,
-  flattenMenuItems,
-  updateStates
-} from '../utils/menu'
+import { translateTemplate, flattenMenuItems, updateStates } from '../utils/menu'
 import { convertArrayBufferToBuffer } from '../utils/index'
 // import logger from '../core/Logger'
 
@@ -18,7 +14,7 @@ let tray = null
 const { platform } = process
 
 export default class TrayManager extends EventEmitter {
-  constructor (options = {}) {
+  constructor(options = {}) {
     super()
 
     this.options = options
@@ -44,7 +40,7 @@ export default class TrayManager extends EventEmitter {
     this.init()
   }
 
-  init () {
+  init() {
     if (tray || this.initialized || this.runMode === APP_RUN_MODE.HIDE_TRAY) {
       return
     }
@@ -58,38 +54,38 @@ export default class TrayManager extends EventEmitter {
     this.initialized = true
   }
 
-  loadTemplate () {
+  loadTemplate() {
     this.template = require('../menus/tray.json')
   }
 
-  loadImages () {
+  loadImages() {
     switch (platform) {
-    case 'darwin':
-      this.loadImagesForMacOS()
-      break
-    case 'win32':
-      this.loadImagesForWindows()
-      break
-    case 'linux':
-      this.loadImagesForLinux()
-      break
+      case 'darwin':
+        this.loadImagesForMacOS()
+        break
+      case 'win32':
+        this.loadImagesForWindows()
+        break
+      case 'linux':
+        this.loadImagesForLinux()
+        break
 
-    default:
-      this.loadImagesForDefault()
-      break
+      default:
+        this.loadImagesForDefault()
+        break
     }
   }
 
-  loadImagesForMacOS () {
+  loadImagesForMacOS() {
     this.normalIcon = this.getFromCacheOrCreateImage('mo-tray-light-normal.png')
   }
 
-  loadImagesForWindows () {
+  loadImagesForWindows() {
     this.normalIcon = this.getFromCacheOrCreateImage('mo-tray-colorful-normal.png')
     this.activeIcon = this.getFromCacheOrCreateImage('mo-tray-colorful-active.png')
   }
 
-  loadImagesForLinux () {
+  loadImagesForLinux() {
     const { theme } = this
     if (theme === APP_THEME.AUTO) {
       this.normalIcon = this.getFromCacheOrCreateImage('mo-tray-dark-normal.png')
@@ -100,12 +96,12 @@ export default class TrayManager extends EventEmitter {
     }
   }
 
-  loadImagesForDefault () {
+  loadImagesForDefault() {
     this.normalIcon = this.getFromCacheOrCreateImage('mo-tray-light-normal.png')
     this.activeIcon = this.getFromCacheOrCreateImage('mo-tray-light-active.png')
   }
 
-  getFromCacheOrCreateImage (key) {
+  getFromCacheOrCreateImage(key) {
     let file = this.getCache(key)
     if (file) {
       return file
@@ -117,15 +113,15 @@ export default class TrayManager extends EventEmitter {
     return file
   }
 
-  getCache (key) {
+  getCache(key) {
     return this.cache[key]
   }
 
-  setCache (key, value) {
+  setCache(key, value) {
     this.cache[key] = value
   }
 
-  buildMenu () {
+  buildMenu() {
     const keystrokesByCommand = {}
     for (const item in this.keymap) {
       keystrokesByCommand[this.keymap[item]] = item
@@ -138,13 +134,13 @@ export default class TrayManager extends EventEmitter {
     this.items = flattenMenuItems(this.menu)
   }
 
-  setupMenu () {
+  setupMenu() {
     this.buildMenu()
 
     this.updateContextMenu()
   }
 
-  initTray () {
+  initTray() {
     const { icon } = this.getIcons()
     tray = new Tray(icon)
     // tray.setPressedImage(inverseIcon)
@@ -154,7 +150,7 @@ export default class TrayManager extends EventEmitter {
     }
   }
 
-  bindEvents () {
+  bindEvents() {
     // All OS
     tray.on('click', this.handleTrayClick)
 
@@ -170,7 +166,7 @@ export default class TrayManager extends EventEmitter {
     tray.on('drop-text', this.handleTrayDropText)
   }
 
-  unbindEvents () {
+  unbindEvents() {
     // All OS
     tray.removeListener('click', this.handleTrayClick)
 
@@ -184,19 +180,19 @@ export default class TrayManager extends EventEmitter {
     tray.removeListener('drop-text', this.handleTrayDropText)
   }
 
-  handleTrayClick = (event) => {
+  handleTrayClick = event => {
     global.application.toggle()
   }
 
-  handleTrayDbClick = (event) => {
+  handleTrayDbClick = event => {
     global.application.show()
   }
 
-  handleTrayRightClick = (event) => {
+  handleTrayRightClick = event => {
     tray.popUpContextMenu(this.menu)
   }
 
-  handleTrayMouseDown = (event) => {
+  handleTrayMouseDown = event => {
     this.focused = true
     this.emit('mouse-down', {
       focused: true,
@@ -205,7 +201,7 @@ export default class TrayManager extends EventEmitter {
     this.renderTray()
   }
 
-  handleTrayMouseUp = (event) => {
+  handleTrayMouseUp = event => {
     this.focused = false
     this.emit('mouse-up', {
       focused: false,
@@ -222,11 +218,11 @@ export default class TrayManager extends EventEmitter {
     this.emit('drop-text', text)
   }
 
-  toggleSpeedometer (enabled) {
+  toggleSpeedometer(enabled) {
     this.speedometer = enabled
   }
 
-  async renderTray () {
+  async renderTray() {
     if (!tray || this.speedometer) {
       return
     }
@@ -239,7 +235,7 @@ export default class TrayManager extends EventEmitter {
     this.updateContextMenu()
   }
 
-  getIcons () {
+  getIcons() {
     if (this.macOS) {
       return { icon: this.normalIcon }
     }
@@ -261,7 +257,7 @@ export default class TrayManager extends EventEmitter {
     }
   }
 
-  updateContextMenu () {
+  updateContextMenu() {
     /**
      * Linux requires setContextMenu to be called
      * in order for the context menu to populate correctly
@@ -273,31 +269,31 @@ export default class TrayManager extends EventEmitter {
     tray.setContextMenu(this.menu)
   }
 
-  updateMenuStates (visibleStates, enabledStates, checkedStates) {
+  updateMenuStates(visibleStates, enabledStates, checkedStates) {
     updateStates(this.items, visibleStates, enabledStates, checkedStates)
 
     this.updateContextMenu()
   }
 
-  updateMenuItemVisibleState (id, flag) {
+  updateMenuItemVisibleState(id, flag) {
     const visibleStates = {
       [id]: flag
     }
     this.updateMenuStates(visibleStates, null, null)
   }
 
-  updateMenuItemEnabledState (id, flag) {
+  updateMenuItemEnabledState(id, flag) {
     const enabledStates = {
       [id]: flag
     }
     this.updateMenuStates(null, enabledStates, null)
   }
 
-  handleLocaleChange (locale) {
+  handleLocaleChange(locale) {
     this.setupMenu()
   }
 
-  handleRunModeChange (mode) {
+  handleRunModeChange(mode) {
     this.runMode = mode
 
     if (mode === APP_RUN_MODE.HIDE_TRAY) {
@@ -307,13 +303,13 @@ export default class TrayManager extends EventEmitter {
     }
   }
 
-  handleSpeedometerEnableChange (enabled) {
+  handleSpeedometerEnableChange(enabled) {
     this.toggleSpeedometer(enabled)
 
     this.renderTray()
   }
 
-  handleSystemThemeChange (systemTheme = APP_THEME.LIGHT) {
+  handleSystemThemeChange(systemTheme = APP_THEME.LIGHT) {
     if (!is.macOS()) {
       return
     }
@@ -326,13 +322,13 @@ export default class TrayManager extends EventEmitter {
     this.renderTray()
   }
 
-  handleDownloadStatusChange (status) {
+  handleDownloadStatusChange(status) {
     this.status = status
 
     this.renderTray()
   }
 
-  async handleSpeedChange ({ uploadSpeed, downloadSpeed }) {
+  async handleSpeedChange({ uploadSpeed, downloadSpeed }) {
     if (!this.speedometer) {
       return
     }
@@ -343,7 +339,7 @@ export default class TrayManager extends EventEmitter {
     await this.renderTray()
   }
 
-  async updateTrayByImage (ab) {
+  async updateTrayByImage(ab) {
     if (!tray) {
       return
     }
@@ -356,7 +352,7 @@ export default class TrayManager extends EventEmitter {
     tray.setImage(image)
   }
 
-  destroy () {
+  destroy() {
     if (tray) {
       this.unbindEvents()
     }

@@ -1,13 +1,13 @@
 import { EventEmitter } from 'events'
 
 export default class CommandManager extends EventEmitter {
-  constructor () {
+  constructor() {
     super()
 
     this.commands = {}
   }
 
-  register (id, fn) {
+  register(id, fn) {
     if (this.commands[id]) {
       console.log('[Motrix] Attempting to register an already-registered command: ' + id)
       return null
@@ -21,7 +21,7 @@ export default class CommandManager extends EventEmitter {
     this.emit('commandRegistered', id)
   }
 
-  unregister (id) {
+  unregister(id) {
     if (this.commands[id]) {
       delete this.commands[id]
 
@@ -29,7 +29,7 @@ export default class CommandManager extends EventEmitter {
     }
   }
 
-  execute (id, ...args) {
+  execute(id, ...args) {
     const fn = this.commands[id]
     if (fn) {
       try {

@@ -1,31 +1,14 @@
 import { isEmpty } from 'lodash'
 
-import {
-  ADD_TASK_TYPE,
-  NONE_SELECTED_FILES,
-  SELECTED_ALL_FILES
-} from '@shared/constants'
+import { ADD_TASK_TYPE, NONE_SELECTED_FILES, SELECTED_ALL_FILES } from '@shared/constants'
 import { splitTaskLinks } from '@shared/utils'
 import { buildOuts } from '@shared/utils/rename'
 
-import {
-  buildUrisFromCurl,
-  buildHeadersFromCurl,
-  buildDefaultOptionsFromCurl
-} from '@shared/utils/curl'
+import { buildUrisFromCurl, buildHeadersFromCurl, buildDefaultOptionsFromCurl } from '@shared/utils/curl'
 
 export const initTaskForm = state => {
   const { addTaskUrl, addTaskOptions } = state.app
-  const {
-    allProxy,
-    dir,
-    engineMaxConnectionPerServer,
-    followMetalink,
-    followTorrent,
-    maxConnectionPerServer,
-    newTaskShowDownloading,
-    split
-  } = state.preference.config
+  const { allProxy, dir, engineMaxConnectionPerServer, followMetalink, followTorrent, maxConnectionPerServer, newTaskShowDownloading, split } = state.preference.config
   const result = {
     allProxy,
     cookie: '',
@@ -48,7 +31,7 @@ export const initTaskForm = state => {
   return result
 }
 
-export const buildHeader = (form) => {
+export const buildHeader = form => {
   const { userAgent, referer, cookie, authorization } = form
   const result = []
 
@@ -69,13 +52,7 @@ export const buildHeader = (form) => {
 }
 
 export const buildOption = (type, form) => {
-  const {
-    allProxy,
-    dir,
-    out,
-    selectFile,
-    split
-  } = form
+  const { allProxy, dir, out, selectFile, split } = form
   const result = {}
 
   if (!isEmpty(allProxy)) {
@@ -95,10 +72,7 @@ export const buildOption = (type, form) => {
   }
 
   if (type === ADD_TASK_TYPE.TORRENT) {
-    if (
-      selectFile !== SELECTED_ALL_FILES &&
-      selectFile !== NONE_SELECTED_FILES
-    ) {
+    if (selectFile !== SELECTED_ALL_FILES && selectFile !== NONE_SELECTED_FILES) {
       result.selectFile = selectFile
     }
   }
@@ -111,7 +85,7 @@ export const buildOption = (type, form) => {
   return result
 }
 
-export const buildUriPayload = (form) => {
+export const buildUriPayload = form => {
   let { uris, out } = form
   if (isEmpty(uris)) {
     throw new Error('task.new-task-uris-required')
@@ -133,7 +107,7 @@ export const buildUriPayload = (form) => {
   return result
 }
 
-export const buildTorrentPayload = (form) => {
+export const buildTorrentPayload = form => {
   const { torrent } = form
   if (isEmpty(torrent)) {
     throw new Error('task.new-task-torrent-required')

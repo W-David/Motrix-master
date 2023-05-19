@@ -10,17 +10,15 @@
     :on-change="handleChange"
     :on-exceed="handleExceed"
     :auto-upload="false"
-    :show-file-list="false">
+    :show-file-list="false"
+  >
     <i class="upload-inbox-icon"><mo-icon name="inbox" width="24" height="24" /></i>
     <div class="el-upload__text">
       {{ $t('task.select-torrent') }}
       <div class="torrent-name" v-if="name">{{ name }}</div>
     </div>
   </el-upload>
-  <div
-    class="selective-torrent"
-    v-else
-  >
+  <div class="selective-torrent" v-else>
     <el-row class="torrent-info" :gutter="12">
       <el-col class="torrent-name" :span="20">
         <el-tooltip class="item" effect="dark" :content="name" placement="top">
@@ -33,122 +31,106 @@
         </span>
       </el-col>
     </el-row>
-    <mo-task-files
-      ref="torrentFileList"
-      mode="ADD"
-      :files="files"
-      :height="200"
-      @selection-change="handleSelectionChange"
-    />
+    <mo-task-files ref="torrentFileList" mode="ADD" :files="files" :height="200" @selection-change="handleSelectionChange" />
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import { remote } from 'parse-torrent'
-  import TaskFiles from '@/components/TaskDetail/TaskFiles'
-  import '@/components/Icons/inbox'
-  import {
-    EMPTY_STRING,
-    NONE_SELECTED_FILES,
-    SELECTED_ALL_FILES
-  } from '@shared/constants'
-  import {
-    buildFileList,
-    listTorrentFiles,
+import { mapState } from 'vuex'
+import { remote } from 'parse-torrent'
+import TaskFiles from '@/components/TaskDetail/TaskFiles'
+import '@/components/Icons/inbox'
+import { EMPTY_STRING, NONE_SELECTED_FILES, SELECTED_ALL_FILES } from '@shared/constants'
+import { buildFileList, listTorrentFiles, bytesToSize, getAsBase64, removeExtensionDot } from '@shared/utils'
+
+export default {
+  name: 'mo-select-torrent',
+  components: {
+    [TaskFiles.name]: TaskFiles
+  },
+  filters: {
     bytesToSize,
-    getAsBase64,
     removeExtensionDot
-  } from '@shared/utils'
-
-  export default {
-    name: 'mo-select-torrent',
-    components: {
-      [TaskFiles.name]: TaskFiles
-    },
-    filters: {
-      bytesToSize,
-      removeExtensionDot
-    },
-    props: {
-    },
-    data () {
-      return {
-        name: EMPTY_STRING,
-        currentTorrent: EMPTY_STRING,
-        files: [],
-        selectedFiles: []
+  },
+  props: {},
+  data() {
+    return {
+      name: EMPTY_STRING,
+      currentTorrent: EMPTY_STRING,
+      files: [],
+      selectedFiles: []
+    }
+  },
+  computed: {
+    ...mapState('app', {
+      torrents: state => state.addTaskTorrents
+    }),
+    ...mapState('preference', {
+      config: state => state.config
+    }),
+    isTorrentsEmpty() {
+      return this.torrents.length === 0
+    }
+  },
+  watch: {
+    torrents(fileList) {
+      if (fileList.length === 0) {
+        this.reset()
+        return
       }
-    },
-    computed: {
-      ...mapState('app', {
-        torrents: state => state.addTaskTorrents
-      }),
-      ...mapState('preference', {
-        config: state => state.config
-      }),
-      isTorrentsEmpty () {
-        return this.torrents.length === 0
+
+      const file = fileList[0]
+      if (!file.raw) {
+        return
       }
-    },
-    watch: {
-      torrents (fileList) {
-        if (fileList.length === 0) {
-          this.reset()
-          return
-        }
 
-        const file = fileList[0]
-        if (!file.raw) {
-          return
-        }
+      remote(file.raw, { timeout: 60 * 1000 }, (err, parsedTorrent) => {
+        if (err) throw err
+        console.log('[Motrix] parsed torrent: ', parsedTorrent)
+        this.files = listTorrentFiles(parsedTorrent.files)
+        this.$refs.torrentFileList.toggleAllSelection()
 
-        remote(file.raw, { timeout: 60 * 1000 }, (err, parsedTorrent) => {
-          if (err) throw err
-          console.log('[Motrix] parsed torrent: ', parsedTorrent)
-          this.files = listTorrentFiles(parsedTorrent.files)
-          this.$refs.torrentFileList.toggleAllSelection()
-
-          getAsBase64(file.raw, (torrent) => {
-            this.name = file.name
-            this.currentTorrent = torrent
-            this.$emit('change', torrent, SELECTED_ALL_FILES)
-          })
+        getAsBase64(file.raw, torrent => {
+          this.name = file.name
+          this.currentTorrent = torrent
+          this.$emit('change', torrent, SELECTED_ALL_FILES)
         })
+      })
+    }
+  },
+  methods: {
+    reset() {
+      this.name = EMPTY_STRING
+      this.currentTorrent = EMPTY_STRING
+      this.files = []
+      if (this.$refs.torrentFileList) {
+        this.$refs.torrentFileList.clearSelection()
       }
+      this.$emit('change', EMPTY_STRING, NONE_SELECTED_FILES)
     },
-    methods: {
-      reset () {
-        this.name = EMPTY_STRING
-        this.currentTorrent = EMPTY_STRING
-        this.files = []
-        if (this.$refs.torrentFileList) {
-          this.$refs.torrentFileList.clearSelection()
-        }
-        this.$emit('change', EMPTY_STRING, NONE_SELECTED_FILES)
-      },
-      handleChange (file, fileList) {
-        this.$store.dispatch('app/addTaskAddTorrents', { fileList })
-      },
-      handleExceed (files) {
-        const fileList = buildFileList(files[0])
-        this.$store.dispatch('app/addTaskAddTorrents', { fileList })
-      },
-      handleTrashClick () {
-        this.$store.dispatch('app/addTaskAddTorrents', { fileList: [] })
-      },
-      handleSelectionChange (val) {
-        const { currentTorrent } = this
-        this.$emit('change', currentTorrent, val)
-      }
+    handleChange(file, fileList) {
+      this.$store.dispatch('app/addTaskAddTorrents', { fileList })
+    },
+    handleExceed(files) {
+      const fileList = buildFileList(files[0])
+      this.$store.dispatch('app/addTaskAddTorrents', { fileList })
+    },
+    handleTrashClick() {
+      this.$store.dispatch('app/addTaskAddTorrents', { fileList: [] })
+    },
+    handleSelectionChange(val) {
+      const { currentTorrent } = this
+      this.$emit('change', currentTorrent, val)
     }
   }
+}
 </script>
 
 <style lang="scss">
 .upload-torrent {
   width: 100%;
-  .el-upload, .el-upload-dragger {
+  .el-upload,
+  .el-upload-dragger {
     width: 100%;
   }
   .el-upload-dragger {
@@ -181,7 +163,7 @@
   .torrent-actions {
     text-align: right;
     line-height: 16px;
-    &> span {
+    & > span {
       cursor: pointer;
       display: inline-block;
       vertical-align: middle;

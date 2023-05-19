@@ -1,19 +1,7 @@
 <template>
-  <mo-drag-select
-    class="task-list"
-    v-if="taskList.length > 0"
-    attribute="attr"
-    @change="handleDragSelectChange"
-  >
-    <div
-      v-for="item in taskList"
-      :key="item.gid"
-      :attr="item.gid"
-      :class="getItemClass(item)"
-    >
-      <mo-task-item
-        :task="item"
-      />
+  <mo-drag-select class="task-list" v-if="taskList.length > 0" attribute="attr" @change="handleDragSelectChange">
+    <div v-for="item in taskList" :key="item.gid" :attr="item.gid" :class="getItemClass(item)">
+      <mo-task-item :task="item" />
     </div>
   </mo-drag-select>
   <div class="no-task" v-else>
@@ -24,47 +12,47 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import { cloneDeep } from 'lodash'
-  import DragSelect from '@/components/DragSelect/Index'
-  import TaskItem from './TaskItem'
+import { mapState } from 'vuex'
+import { cloneDeep } from 'lodash'
+import DragSelect from '@/components/DragSelect/Index'
+import TaskItem from './TaskItem'
 
-  export default {
-    name: 'mo-task-list',
-    components: {
-      [DragSelect.name]: DragSelect,
-      [TaskItem.name]: TaskItem
+export default {
+  name: 'mo-task-list',
+  components: {
+    [DragSelect.name]: DragSelect,
+    [TaskItem.name]: TaskItem
+  },
+  data() {
+    const selectedList = cloneDeep(this.$store.state.task.selectedList) || []
+    return {
+      selectedList
+    }
+  },
+  computed: {
+    ...mapState('task', {
+      taskList: state => state.taskList,
+      selectedGidList: state => state.selectedGidList
+    })
+  },
+  methods: {
+    handleDragSelectChange(selectedList) {
+      this.selectedList = selectedList
+      this.$store.dispatch('task/selectTasks', cloneDeep(selectedList))
     },
-    data () {
-      const selectedList = cloneDeep(this.$store.state.task.selectedList) || []
+    getItemClass(item) {
+      const isSelected = this.selectedList.includes(item.gid)
       return {
-        selectedList
-      }
-    },
-    computed: {
-      ...mapState('task', {
-        taskList: state => state.taskList,
-        selectedGidList: state => state.selectedGidList
-      })
-    },
-    methods: {
-      handleDragSelectChange (selectedList) {
-        this.selectedList = selectedList
-        this.$store.dispatch('task/selectTasks', cloneDeep(selectedList))
-      },
-      getItemClass (item) {
-        const isSelected = this.selectedList.includes(item.gid)
-        return {
-          selected: isSelected
-        }
-      }
-    },
-    watch: {
-      selectedGidList (newVal) {
-        this.selectedList = newVal
+        selected: isSelected
       }
     }
+  },
+  watch: {
+    selectedGidList(newVal) {
+      this.selectedList = newVal
+    }
   }
+}
 </script>
 
 <style lang="scss">

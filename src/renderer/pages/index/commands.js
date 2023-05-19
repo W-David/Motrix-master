@@ -1,17 +1,13 @@
-import { Message } from 'element-ui'
 import { base64StringToBlob } from 'blob-util'
+import { Message } from 'element-ui'
 
+import { commands } from '@/components/CommandManager/instance'
+import { getLocaleManager } from '@/components/Locale'
 import router from '@/router'
 import store from '@/store'
-import { buildFileList } from '@shared/utils'
+import { buildTorrentPayload, buildUriPayload, initTaskForm } from '@/utils/task'
 import { ADD_TASK_TYPE } from '@shared/constants'
-import { getLocaleManager } from '@/components/Locale'
-import { commands } from '@/components/CommandManager/instance'
-import {
-  initTaskForm,
-  buildUriPayload,
-  buildTorrentPayload
-} from '@/utils/task'
+import { buildFileList } from '@shared/utils'
 
 const i18n = getLocaleManager().getI18n()
 
@@ -35,12 +31,7 @@ const showAboutPanel = () => {
 }
 
 const addTask = (payload = {}) => {
-  const {
-    type = ADD_TASK_TYPE.URI,
-    uri,
-    silent,
-    ...rest
-  } = payload
+  const { type = ADD_TASK_TYPE.URI, uri, silent, ...rest } = payload
 
   const options = {
     ...rest
@@ -59,7 +50,7 @@ const addTask = (payload = {}) => {
   store.dispatch('app/showAddTaskDialog', type)
 }
 
-const addTaskSilent = (type) => {
+const addTaskSilent = type => {
   try {
     addTaskByType(type)
   } catch (err) {
@@ -67,7 +58,7 @@ const addTaskSilent = (type) => {
   }
 }
 
-const addTaskByType = (type) => {
+const addTaskByType = type => {
   const form = initTaskForm(store.state)
 
   let payload = null
@@ -82,7 +73,7 @@ const addTaskByType = (type) => {
       Message.error(err.message)
     })
   } else if (type === 'metalink') {
-  // @TODO addMetalink
+    // @TODO addMetalink
   } else {
     console.error('addTask fail', form)
   }

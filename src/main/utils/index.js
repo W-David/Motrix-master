@@ -3,44 +3,40 @@ import is from 'electron-is'
 import { resolve } from 'path'
 import { existsSync, lstatSync } from 'fs'
 
-import {
-  APP_THEME,
-  ENGINE_MAX_CONNECTION_PER_SERVER,
-  IP_VERSION
-} from '@shared/constants'
+import { APP_THEME, ENGINE_MAX_CONNECTION_PER_SERVER, IP_VERSION } from '@shared/constants'
 import { engineBinMap, engineArchMap } from '../configs/engine'
 
-export function getLogPath () {
+export function getLogPath() {
   return app.getPath('logs')
 }
 
-export function getDhtPath (protocol) {
+export function getDhtPath(protocol) {
   const name = protocol === IP_VERSION.V6 ? 'dht6.dat' : 'dht.dat'
   return resolve(app.getPath('userData'), `./${name}`)
 }
 
-export function getSessionPath () {
+export function getSessionPath() {
   return resolve(app.getPath('userData'), './download.session')
 }
 
-export function getEnginePidPath () {
+export function getEnginePidPath() {
   return resolve(app.getPath('userData'), './engine.pid')
 }
 
-export function getUserDataPath () {
+export function getUserDataPath() {
   return app.getPath('userData')
 }
 
-export function getUserDownloadsPath () {
+export function getUserDownloadsPath() {
   return app.getPath('downloads')
 }
 
-export function getEngineBin (platform) {
+export function getEngineBin(platform) {
   const result = engineBinMap[platform] || ''
   return result
 }
 
-export function getEngineArch (platform, arch) {
+export function getEngineArch(platform, arch) {
   if (!['darwin', 'win32', 'linux'].includes(platform)) {
     return ''
   }
@@ -76,7 +72,7 @@ export const getAria2ConfPath = (platform, arch) => {
   return resolve(base, './aria2.conf')
 }
 
-export function transformConfig (config) {
+export function transformConfig(config) {
   const result = []
   for (const [k, v] of Object.entries(config)) {
     if (v !== '') {
@@ -86,7 +82,7 @@ export function transformConfig (config) {
   return result
 }
 
-export function isRunningInDmg () {
+export function isRunningInDmg() {
   if (!is.macOS() || is.dev()) {
     return false
   }
@@ -95,7 +91,7 @@ export function isRunningInDmg () {
   return result
 }
 
-export function moveAppToApplicationsFolder (errorMsg = '') {
+export function moveAppToApplicationsFolder(errorMsg = '') {
   return new Promise((resolve, reject) => {
     try {
       const result = app.moveToApplicationsFolder()
@@ -110,7 +106,7 @@ export function moveAppToApplicationsFolder (errorMsg = '') {
   })
 }
 
-export function splitArgv (argv) {
+export function splitArgv(argv) {
   const args = []
   const extra = {}
   for (const arg of argv) {
@@ -126,7 +122,7 @@ export function splitArgv (argv) {
   return { args, extra }
 }
 
-export function parseArgvAsUrl (argv) {
+export function parseArgvAsUrl(argv) {
   const arg = argv[1]
   if (!arg) {
     return
@@ -137,7 +133,7 @@ export function parseArgvAsUrl (argv) {
   }
 }
 
-export function checkIsSupportedSchema (url = '') {
+export function checkIsSupportedSchema(url = '') {
   const str = url.toLowerCase()
   if (
     str.startsWith('ftp:') ||
@@ -154,11 +150,11 @@ export function checkIsSupportedSchema (url = '') {
   }
 }
 
-export function isDirectory (path) {
+export function isDirectory(path) {
   return existsSync(path) && lstatSync(path).isDirectory()
 }
 
-export function parseArgvAsFile (argv) {
+export function parseArgvAsFile(argv) {
   let arg = argv[1]
   if (!arg || isDirectory(arg)) {
     return
@@ -180,7 +176,7 @@ export const getSystemTheme = () => {
   return result
 }
 
-export const convertArrayBufferToBuffer = (arrayBuffer) => {
+export const convertArrayBufferToBuffer = arrayBuffer => {
   const buffer = Buffer.alloc(arrayBuffer.byteLength)
   const view = new Uint8Array(arrayBuffer)
   for (let i = 0; i < buffer.length; ++i) {

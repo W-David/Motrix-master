@@ -3,18 +3,15 @@ import { access, constants } from 'fs'
 import { resolve } from 'path'
 import { Message } from 'element-ui'
 
-import {
-  getFileNameFromFile,
-  isMagnetTask
-} from '@shared/utils'
+import { getFileNameFromFile, isMagnetTask } from '@shared/utils'
 import { APP_THEME, TASK_STATUS } from '@shared/constants'
 
-export function showItemInFolder (fullPath, { errorMsg }) {
+export function showItemInFolder(fullPath, { errorMsg }) {
   if (!fullPath) {
     return
   }
 
-  access(fullPath, constants.F_OK, (err) => {
+  access(fullPath, constants.F_OK, err => {
     console.log(`[Motrix] ${fullPath} ${err ? 'does not exist' : 'exists'}`)
     if (err) {
       Message.error(errorMsg)
@@ -25,7 +22,7 @@ export function showItemInFolder (fullPath, { errorMsg }) {
   })
 }
 
-export const openItem = async (fullPath) => {
+export const openItem = async fullPath => {
   if (!fullPath) {
     return
   }
@@ -34,7 +31,7 @@ export const openItem = async (fullPath) => {
   return result
 }
 
-export function getTaskFullPath (task) {
+export function getTaskFullPath(task) {
   const { dir, files, bittorrent } = task
   let result = resolve(dir)
 
@@ -66,7 +63,7 @@ export function getTaskFullPath (task) {
   return result
 }
 
-export const moveTaskFilesToTrash = (task) => {
+export const moveTaskFilesToTrash = task => {
   /**
    * For magnet link tasks, there is bittorrent, but there is no bittorrent.info.
    * The path is not a complete path before it becomes a BT task.
@@ -84,7 +81,7 @@ export const moveTaskFilesToTrash = (task) => {
   }
 
   let deleteResult1 = true
-  access(path, constants.F_OK, async (err) => {
+  access(path, constants.F_OK, async err => {
     console.log(`[Motrix] ${path} ${err ? 'does not exist' : 'exists'}`)
     if (!err) {
       deleteResult1 = await shell.trashItem(path)
@@ -98,7 +95,7 @@ export const moveTaskFilesToTrash = (task) => {
 
   let deleteResult2 = true
   const extraFilePath = `${path}.aria2`
-  access(extraFilePath, constants.F_OK, async (err) => {
+  access(extraFilePath, constants.F_OK, async err => {
     console.log(`[Motrix] ${extraFilePath} ${err ? 'does not exist' : 'exists'}`)
     if (!err) {
       deleteResult2 = await shell.trashItem(extraFilePath)
@@ -108,7 +105,7 @@ export const moveTaskFilesToTrash = (task) => {
   return deleteResult1 && deleteResult2
 }
 
-export function getSystemTheme () {
+export function getSystemTheme() {
   return nativeTheme.shouldUseDarkColors ? APP_THEME.DARK : APP_THEME.LIGHT
 }
 

@@ -2,13 +2,17 @@ import { APP_THEME, TRAY_CANVAS_CONFIG } from '@shared/constants'
 
 // Temp Fix: Cannot find module 'lodash'
 // import { bytesToSize } from '@shared/utils'
-const bytesToSize = (bytes) => {
+const bytesToSize = bytes => {
   const b = parseInt(bytes, 10)
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  if (b === 0) { return '0 KB' }
+  if (b === 0) {
+    return '0 KB'
+  }
   const i = parseInt(Math.floor(Math.log(b) / Math.log(1024)), 10)
-  if (i === 0) { return `${b} ${sizes[i]}` }
-  return `${(b / (1024 ** i)).toFixed(1)} ${sizes[i]}`
+  if (i === 0) {
+    return `${b} ${sizes[i]}`
+  }
+  return `${(b / 1024 ** i).toFixed(1)} ${sizes[i]}`
 }
 
 const lightTextColor = '#000'
@@ -21,23 +25,15 @@ const baseTextWidth = TRAY_CANVAS_CONFIG.TEXT_WIDTH
 const baseFontSize = TRAY_CANVAS_CONFIG.TEXT_FONT_SIZE
 const fontFamily = 'Arial'
 
-export const draw = async ({
-  canvas,
-  theme,
-  icon,
-  uploadSpeed,
-  downloadSpeed,
-  scale,
-  resultType
-}) => {
+export const draw = async ({ canvas, theme, icon, uploadSpeed, downloadSpeed, scale, resultType }) => {
   if (!canvas) {
     throw new Error('canvas is required')
   }
 
   const width = baseWidth * scale
   const height = baseHeight * scale
-  const textColor = (theme === APP_THEME.LIGHT) ? lightTextColor : darkTextColor
-  const fontSize = (baseFontSize * scale) + 1
+  const textColor = theme === APP_THEME.LIGHT ? lightTextColor : darkTextColor
+  const fontSize = baseFontSize * scale + 1
   const textFont = `${fontSize}px "${fontFamily}"`
   const iconWidth = baseIconWidth * scale
   const iconHeight = baseIconHeight * scale
@@ -78,13 +74,13 @@ export const draw = async ({
 
 export const transferCanvasTo = (canvas, type) => {
   switch (type) {
-  case 'DATA_URL':
-    return canvas.toDataURL()
-  case 'BLOB':
-    return canvas.convertToBlob()
-  case 'BITMAP':
-    return canvas.transferToImageBitmap()
-  default:
-    return canvas.convertToBlob()
+    case 'DATA_URL':
+      return canvas.toDataURL()
+    case 'BLOB':
+      return canvas.convertToBlob()
+    case 'BITMAP':
+      return canvas.transferToImageBitmap()
+    default:
+      return canvas.convertToBlob()
   }
 }

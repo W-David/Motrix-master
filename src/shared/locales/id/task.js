@@ -1,7 +1,7 @@
 export default {
-  'active': 'Mengunduh',
-  'waiting': 'Mengunggu',
-  'stopped': 'Terhenti',
+  active: 'Mengunduh',
+  waiting: 'Mengunggu',
+  stopped: 'Terhenti',
   'new-task': 'Tugas Baru',
   'new-bt-task': 'Tugas BT baru',
   'open-file': 'Buka Berkas Torrent...',

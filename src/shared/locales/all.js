@@ -54,31 +54,31 @@ import appLocaleZhTW from '@shared/locales/zh-TW'
 // Please keep the locale key in alphabetical order.
 /* eslint-disable quote-props */
 const resources = {
-  'ar': {
+  ar: {
     translation: {
       ...eleLocaleAr,
       ...appLocaleAr
     }
   },
-  'bg': {
+  bg: {
     translation: {
       ...eleLocaleBg,
       ...appLocaleBg
     }
   },
-  'ca': {
+  ca: {
     translation: {
       ...eleLocaleCa,
       ...appLocaleCa
     }
   },
-  'de': {
+  de: {
     translation: {
       ...eleLocaleDe,
       ...appLocaleDe
     }
   },
-  'el': {
+  el: {
     translation: {
       ...eleLocaleEl,
       ...appLocaleEl
@@ -90,67 +90,67 @@ const resources = {
       ...appLocaleEnUS
     }
   },
-  'es': {
+  es: {
     translation: {
       ...eleLocaleEs,
       ...appLocaleEs
     }
   },
-  'fa': {
+  fa: {
     translation: {
       ...eleLocaleFa,
       ...appLocaleFa
     }
   },
-  'fr': {
+  fr: {
     translation: {
       ...eleLocaleFr,
       ...appLocaleFr
     }
   },
-  'hu': {
+  hu: {
     translation: {
       ...eleLocaleHu,
       ...appLocaleHu
     }
   },
-  'id': {
+  id: {
     translation: {
       ...eleLocaleId,
       ...appLocaleId
     }
   },
-  'it': {
+  it: {
     translation: {
       ...elelocaleIt,
       ...applocaleIt
     }
   },
-  'ja': {
+  ja: {
     translation: {
       ...eleLocaleJa,
       ...appLocaleJa
     }
   },
-  'ko': {
+  ko: {
     translation: {
       ...eleLocaleKo,
       ...appLocaleKo
     }
   },
-  'nb': {
+  nb: {
     translation: {
       ...eleLocaleNb,
       ...appLocaleNb
     }
   },
-  'nl': {
+  nl: {
     translation: {
       ...eleLocaleNl,
       ...appLocaleNl
     }
   },
-  'pl': {
+  pl: {
     translation: {
       ...eleLocalePl,
       ...appLocalePl
@@ -162,37 +162,37 @@ const resources = {
       ...appLocalePtBR
     }
   },
-  'ro': {
+  ro: {
     translation: {
       ...eleLocaleRo,
       ...appLocaleRo
     }
   },
-  'ru': {
+  ru: {
     translation: {
       ...eleLocaleRu,
       ...appLocaleRu
     }
   },
-  'th': {
+  th: {
     translation: {
       ...eleLocaleTh,
       ...appLocaleTh
     }
   },
-  'tr': {
+  tr: {
     translation: {
       ...eleLocaleTr,
       ...appLocaleTr
     }
   },
-  'uk': {
+  uk: {
     translation: {
       ...eleLocaleUk,
       ...appLocaleUk
     }
   },
-  'vi': {
+  vi: {
     translation: {
       ...eleLocaleVi,
       ...appLocaleVi

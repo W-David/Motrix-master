@@ -1,7 +1,7 @@
 export default {
-  'active': 'ダウンロード中',
-  'waiting': '待機中',
-  'stopped': '一時停止中',
+  active: 'ダウンロード中',
+  waiting: '待機中',
+  stopped: '一時停止中',
   'new-task': '新規タスク',
   'new-bt-task': '新規torrentタスク',
   'open-file': 'torrentファイルを開く...',

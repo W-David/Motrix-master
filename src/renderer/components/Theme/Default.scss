@@ -5,9 +5,8 @@ body {
 }
 
 body {
-  font-family: "Monospaced Number", "Chinese Quote", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Monospaced Number', 'Chinese Quote', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
   font-variant: tabular-nums;
   font-size: $--font-size-medium;
 }
@@ -57,7 +56,7 @@ iframe {
 
 .el-progress--line.is-text {
   .el-progress-bar__inner::before {
-    content: "";
+    content: '';
     opacity: 0;
     position: absolute;
     top: 0;
@@ -276,7 +275,7 @@ iframe {
   line-height: 0;
   border: 1px solid $--task-detail-box-border;
   border-radius: $--border-radius-base;
-  &> svg {
+  & > svg {
     display: block;
     margin: 0 auto;
   }
@@ -287,9 +286,9 @@ iframe {
   color: $--input-font-color;
 }
 
-@media only screen and (max-width:567px) {
+@media only screen and (max-width: 567px) {
   .hidden-xs-only {
-    display:none !important
+    display: none !important;
   }
 }
 

@@ -36,7 +36,7 @@ const { chdir } = require('process')
 const pkg = require('../package.json')
 const binName = `${pkg.name}`.toLowerCase()
 
-const exec = async function exec (cmd, args = []) {
+const exec = async function exec(cmd, args = []) {
   const child = spawn(cmd, args, { shell: true })
   redirectOutputFor(child)
   await waitFor(child)
@@ -64,18 +64,11 @@ const waitFor = async function (child) {
   })
 }
 
-const linuxTargets = [
-  'AppImage',
-  'deb',
-  'rpm',
-  'snap'
-]
+const linuxTargets = ['AppImage', 'deb', 'rpm', 'snap']
 
 module.exports = async function (context) {
   console.warn('after build; disable sandbox')
-  const isLinux = context.targets.find(
-    target => linuxTargets.includes(target)
-  )
+  const isLinux = context.targets.find(target => linuxTargets.includes(target))
   if (!isLinux) {
     return
   }

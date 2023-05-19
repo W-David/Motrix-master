@@ -6,13 +6,13 @@ let client = null
 const mappingStatus = {}
 
 export default class UPnPManager {
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.options = {
       ...options
     }
   }
 
-  init () {
+  init() {
     if (client) {
       return
     }
@@ -22,7 +22,7 @@ export default class UPnPManager {
     })
   }
 
-  map (port) {
+  map(port) {
     this.init()
 
     return new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ export default class UPnPManager {
       }
 
       try {
-        client.map(port, (err) => {
+        client.map(port, err => {
           if (err) {
             logger.warn(`[Motrix] UPnPManager map ${port} failed, error: `, err.message)
             reject(err.message)
@@ -50,7 +50,7 @@ export default class UPnPManager {
     })
   }
 
-  unmap (port) {
+  unmap(port) {
     this.init()
 
     return new Promise((resolve, reject) => {
@@ -66,7 +66,7 @@ export default class UPnPManager {
       }
 
       try {
-        client.unmap(port, (err) => {
+        client.unmap(port, err => {
           if (err) {
             logger.warn(`[Motrix] UPnPManager unmap ${port} failed, error: `, err)
             reject(err.message)
@@ -83,7 +83,7 @@ export default class UPnPManager {
     })
   }
 
-  closeClient () {
+  closeClient() {
     if (!client) {
       return
     }

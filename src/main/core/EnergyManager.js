@@ -4,7 +4,7 @@ import logger from './Logger'
 
 let psbId
 export default class EnergyManager {
-  startPowerSaveBlocker () {
+  startPowerSaveBlocker() {
     if (psbId && powerSaveBlocker.isStarted(psbId)) {
       return
     }
@@ -13,7 +13,7 @@ export default class EnergyManager {
     logger.info('[Motrix] start power save blocker:', psbId)
   }
 
-  stopPowerSaveBlocker () {
+  stopPowerSaveBlocker() {
     if (typeof psbId === 'undefined' || !powerSaveBlocker.isStarted(psbId)) {
       return
     }

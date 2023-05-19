@@ -2,55 +2,43 @@ import { ipcRenderer } from 'electron'
 import is from 'electron-is'
 import { isEmpty, clone } from 'lodash'
 import { Aria2 } from '@shared/aria2'
-import {
-  separateConfig,
-  compactUndefined,
-  formatOptionsForEngine,
-  mergeTaskResult,
-  changeKeysToCamelCase,
-  changeKeysToKebabCase
-} from '@shared/utils'
+import { separateConfig, compactUndefined, formatOptionsForEngine, mergeTaskResult, changeKeysToCamelCase, changeKeysToKebabCase } from '@shared/utils'
 import { ENGINE_RPC_HOST } from '@shared/constants'
 
 export default class Api {
-  constructor (options = {}) {
+  constructor(options = {}) {
     this.options = options
 
     this.init()
   }
 
-  async init () {
+  async init() {
     this.config = await this.loadConfig()
 
     this.client = this.initClient()
     this.client.open()
   }
 
-  loadConfigFromLocalStorage () {
+  loadConfigFromLocalStorage() {
     // TODO
     const result = {}
     return result
   }
 
-  async loadConfigFromNativeStore () {
+  async loadConfigFromNativeStore() {
     const result = await ipcRenderer.invoke('get-app-config')
     return result
   }
 
-  async loadConfig () {
-    let result = is.renderer()
-      ? await this.loadConfigFromNativeStore()
-      : this.loadConfigFromLocalStorage()
+  async loadConfig() {
+    let result = is.renderer() ? await this.loadConfigFromNativeStore() : this.loadConfigFromLocalStorage()
 
     result = changeKeysToCamelCase(result)
     return result
   }
 
-  initClient () {
-    const {
-      rpcListenPort: port,
-      rpcSecret: secret
-    } = this.config
+  initClient() {
+    const { rpcListenPort: port, rpcSecret: secret } = this.config
     const host = ENGINE_RPC_HOST
     return new Aria2({
       host,
@@ -59,8 +47,9 @@ export default class Api {
     })
   }
 
-  closeClient () {
-    this.client.close()
+  closeClient() {
+    this.client
+      .close()
       .then(() => {
         this.client = null
       })
@@ -69,14 +58,14 @@ export default class Api {
       })
   }
 
-  fetchPreference () {
-    return new Promise((resolve) => {
+  fetchPreference() {
+    return new Promise(resolve => {
       this.config = this.loadConfig()
       resolve(this.config)
     })
   }
 
-  savePreference (params = {}) {
+  savePreference(params = {}) {
     const kebabParams = changeKeysToKebabCase(params)
     if (is.renderer()) {
       return this.savePreferenceToNativeStore(kebabParams)
@@ -85,11 +74,11 @@ export default class Api {
     }
   }
 
-  savePreferenceToLocalStorage () {
+  savePreferenceToLocalStorage() {
     // TODO
   }
 
-  savePreferenceToNativeStore (params = {}) {
+  savePreferenceToNativeStore(params = {}) {
     const { user, system, others } = separateConfig(params)
     const config = {}
 
@@ -111,50 +100,47 @@ export default class Api {
     ipcRenderer.send('command', 'application:save-preference', config)
   }
 
-  getVersion () {
+  getVersion() {
     return this.client.call('getVersion')
   }
 
-  changeGlobalOption (options) {
+  changeGlobalOption(options) {
     const args = formatOptionsForEngine(options)
 
     return this.client.call('changeGlobalOption', args)
   }
 
-  getGlobalOption () {
-    return new Promise((resolve) => {
-      this.client.call('getGlobalOption')
-        .then((data) => {
-          resolve(changeKeysToCamelCase(data))
-        })
+  getGlobalOption() {
+    return new Promise(resolve => {
+      this.client.call('getGlobalOption').then(data => {
+        resolve(changeKeysToCamelCase(data))
+      })
     })
   }
 
-  getOption (params = {}) {
+  getOption(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
 
-    return new Promise((resolve) => {
-      this.client.call('getOption', ...args)
-        .then((data) => {
-          resolve(changeKeysToCamelCase(data))
-        })
+    return new Promise(resolve => {
+      this.client.call('getOption', ...args).then(data => {
+        resolve(changeKeysToCamelCase(data))
+      })
     })
   }
 
-  updateActiveTaskOption (options) {
-    this.fetchTaskList({ type: 'active' })
-      .then((data) => {
-        if (isEmpty(data)) {
-          return
-        }
+  updateActiveTaskOption(options) {
+    this.fetchTaskList({ type: 'active' }).then(data => {
+      if (isEmpty(data)) {
+        return
+      }
 
-        const gids = data.map((task) => task.gid)
-        this.batchChangeOption({ gids, options })
-      })
+      const gids = data.map(task => task.gid)
+      this.batchChangeOption({ gids, options })
+    })
   }
 
-  changeOption (params = {}) {
+  changeOption(params = {}) {
     const { gid, options = {} } = params
 
     const engineOptions = formatOptionsForEngine(options)
@@ -163,16 +149,12 @@ export default class Api {
     return this.client.call('changeOption', ...args)
   }
 
-  getGlobalStat () {
+  getGlobalStat() {
     return this.client.call('getGlobalStat')
   }
 
-  addUri (params) {
-    const {
-      uris,
-      outs,
-      options
-    } = params
+  addUri(params) {
+    const { uris, outs, options } = params
     const tasks = uris.map((uri, index) => {
       const engineOptions = formatOptionsForEngine(options)
       if (outs && outs[index]) {
@@ -184,170 +166,170 @@ export default class Api {
     return this.client.multicall(tasks)
   }
 
-  addTorrent (params) {
-    const {
-      torrent,
-      options
-    } = params
+  addTorrent(params) {
+    const { torrent, options } = params
     const engineOptions = formatOptionsForEngine(options)
     const args = compactUndefined([torrent, [], engineOptions])
     return this.client.call('addTorrent', ...args)
   }
 
-  addMetalink (params) {
-    const {
-      metalink,
-      options
-    } = params
+  addMetalink(params) {
+    const { metalink, options } = params
     const engineOptions = formatOptionsForEngine(options)
     const args = compactUndefined([metalink, engineOptions])
     return this.client.call('addMetalink', ...args)
   }
 
-  fetchDownloadingTaskList (params = {}) {
+  fetchDownloadingTaskList(params = {}) {
     const { offset = 0, num = 20, keys } = params
     const activeArgs = compactUndefined([keys])
     const waitingArgs = compactUndefined([offset, num, keys])
     return new Promise((resolve, reject) => {
-      this.client.multicall([
-        ['aria2.tellActive', ...activeArgs],
-        ['aria2.tellWaiting', ...waitingArgs]
-      ]).then((data) => {
-        console.log('[Motrix] fetch downloading task list data:', data)
-        const result = mergeTaskResult(data)
-        resolve(result)
-      }).catch((err) => {
-        console.log('[Motrix] fetch downloading task list fail:', err)
-        reject(err)
-      })
+      this.client
+        .multicall([
+          ['aria2.tellActive', ...activeArgs],
+          ['aria2.tellWaiting', ...waitingArgs]
+        ])
+        .then(data => {
+          console.log('[Motrix] fetch downloading task list data:', data)
+          const result = mergeTaskResult(data)
+          resolve(result)
+        })
+        .catch(err => {
+          console.log('[Motrix] fetch downloading task list fail:', err)
+          reject(err)
+        })
     })
   }
 
-  fetchWaitingTaskList (params = {}) {
+  fetchWaitingTaskList(params = {}) {
     const { offset = 0, num = 20, keys } = params
     const args = compactUndefined([offset, num, keys])
     return this.client.call('tellWaiting', ...args)
   }
 
-  fetchStoppedTaskList (params = {}) {
+  fetchStoppedTaskList(params = {}) {
     const { offset = 0, num = 20, keys } = params
     const args = compactUndefined([offset, num, keys])
     return this.client.call('tellStopped', ...args)
   }
 
-  fetchActiveTaskList (params = {}) {
+  fetchActiveTaskList(params = {}) {
     const { keys } = params
     const args = compactUndefined([keys])
     return this.client.call('tellActive', ...args)
   }
 
-  fetchTaskList (params = {}) {
+  fetchTaskList(params = {}) {
     const { type } = params
     switch (type) {
-    case 'active':
-      return this.fetchDownloadingTaskList(params)
-    case 'waiting':
-      return this.fetchWaitingTaskList(params)
-    case 'stopped':
-      return this.fetchStoppedTaskList(params)
-    default:
-      return this.fetchDownloadingTaskList(params)
+      case 'active':
+        return this.fetchDownloadingTaskList(params)
+      case 'waiting':
+        return this.fetchWaitingTaskList(params)
+      case 'stopped':
+        return this.fetchStoppedTaskList(params)
+      default:
+        return this.fetchDownloadingTaskList(params)
     }
   }
 
-  fetchTaskItem (params = {}) {
+  fetchTaskItem(params = {}) {
     const { gid, keys } = params
     const args = compactUndefined([gid, keys])
     return this.client.call('tellStatus', ...args)
   }
 
-  fetchTaskItemWithPeers (params = {}) {
+  fetchTaskItemWithPeers(params = {}) {
     const { gid, keys } = params
     const statusArgs = compactUndefined([gid, keys])
     const peersArgs = compactUndefined([gid])
     return new Promise((resolve, reject) => {
-      this.client.multicall([
-        ['aria2.tellStatus', ...statusArgs],
-        ['aria2.getPeers', ...peersArgs]
-      ]).then((data) => {
-        console.log('[Motrix] fetchTaskItemWithPeers:', data)
-        const result = data[0] && data[0][0]
-        const peers = data[1] && data[1][0]
-        result.peers = peers || []
-        console.log('[Motrix] fetchTaskItemWithPeers.result:', result)
-        console.log('[Motrix] fetchTaskItemWithPeers.peers:', peers)
+      this.client
+        .multicall([
+          ['aria2.tellStatus', ...statusArgs],
+          ['aria2.getPeers', ...peersArgs]
+        ])
+        .then(data => {
+          console.log('[Motrix] fetchTaskItemWithPeers:', data)
+          const result = data[0] && data[0][0]
+          const peers = data[1] && data[1][0]
+          result.peers = peers || []
+          console.log('[Motrix] fetchTaskItemWithPeers.result:', result)
+          console.log('[Motrix] fetchTaskItemWithPeers.peers:', peers)
 
-        resolve(result)
-      }).catch((err) => {
-        console.log('[Motrix] fetch downloading task list fail:', err)
-        reject(err)
-      })
+          resolve(result)
+        })
+        .catch(err => {
+          console.log('[Motrix] fetch downloading task list fail:', err)
+          reject(err)
+        })
     })
   }
 
-  fetchTaskItemPeers (params = {}) {
+  fetchTaskItemPeers(params = {}) {
     const { gid, keys } = params
     const args = compactUndefined([gid, keys])
     return this.client.call('getPeers', ...args)
   }
 
-  pauseTask (params = {}) {
+  pauseTask(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('pause', ...args)
   }
 
-  pauseAllTask (params = {}) {
+  pauseAllTask(params = {}) {
     return this.client.call('pauseAll')
   }
 
-  forcePauseTask (params = {}) {
+  forcePauseTask(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('forcePause', ...args)
   }
 
-  forcePauseAllTask (params = {}) {
+  forcePauseAllTask(params = {}) {
     return this.client.call('forcePauseAll')
   }
 
-  resumeTask (params = {}) {
+  resumeTask(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('unpause', ...args)
   }
 
-  resumeAllTask (params = {}) {
+  resumeAllTask(params = {}) {
     return this.client.call('unpauseAll')
   }
 
-  removeTask (params = {}) {
+  removeTask(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('remove', ...args)
   }
 
-  forceRemoveTask (params = {}) {
+  forceRemoveTask(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('forceRemove', ...args)
   }
 
-  saveSession (params = {}) {
+  saveSession(params = {}) {
     return this.client.call('saveSession')
   }
 
-  purgeTaskRecord (params = {}) {
+  purgeTaskRecord(params = {}) {
     return this.client.call('purgeDownloadResult')
   }
 
-  removeTaskRecord (params = {}) {
+  removeTaskRecord(params = {}) {
     const { gid } = params
     const args = compactUndefined([gid])
     return this.client.call('removeDownloadResult', ...args)
   }
 
-  multicall (method, params = {}) {
+  multicall(method, params = {}) {
     let { gids, options = {} } = params
     options = formatOptionsForEngine(options)
 
@@ -359,23 +341,23 @@ export default class Api {
     return this.client.multicall(data)
   }
 
-  batchChangeOption (params = {}) {
+  batchChangeOption(params = {}) {
     return this.multicall('aria2.changeOption', params)
   }
 
-  batchRemoveTask (params = {}) {
+  batchRemoveTask(params = {}) {
     return this.multicall('aria2.remove', params)
   }
 
-  batchResumeTask (params = {}) {
+  batchResumeTask(params = {}) {
     return this.multicall('aria2.unpause', params)
   }
 
-  batchPauseTask (params = {}) {
+  batchPauseTask(params = {}) {
     return this.multicall('aria2.pause', params)
   }
 
-  batchForcePauseTask (params = {}) {
+  batchForcePauseTask(params = {}) {
     return this.multicall('aria2.forcePause', params)
   }
 }

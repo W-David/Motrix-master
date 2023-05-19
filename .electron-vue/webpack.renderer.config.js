@@ -6,13 +6,13 @@ const devMode = process.env.NODE_ENV !== 'production'
 const path = require('path')
 const { dependencies } = require('../package.json')
 const Webpack = require('webpack')
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
-const ESLintPlugin = require('eslint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin')
 
 /**
  * List of node_modules to include in webpack bundle
@@ -27,9 +27,7 @@ let rendererConfig = {
   entry: {
     index: path.join(__dirname, '../src/renderer/pages/index/main.js')
   },
-  externals: [
-    ...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))
-  ],
+  externals: [...Object.keys(dependencies || {}).filter(d => !whiteListedModules.includes(d))],
   module: {
     rules: [
       {
@@ -50,9 +48,9 @@ let rendererConfig = {
               implementation: require('sass'),
               additionalData: '@import "@/components/Theme/Variables.scss";',
               sassOptions: {
-                includePaths:[__dirname, 'src']
+                includePaths: [__dirname, 'src']
               }
-            },
+            }
           }
         ]
       },
@@ -68,26 +66,19 @@ let rendererConfig = {
               indentedSyntax: true,
               additionalData: '@import "@/components/Theme/Variables.scss";',
               sassOptions: {
-                includePaths:[__dirname, 'src']
+                includePaths: [__dirname, 'src']
               }
-            },
+            }
           }
         ]
       },
       {
         test: /\.less$/,
-        use: [
-          devMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          'less-loader'
-        ]
+        use: [devMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
       },
       {
         test: /\.css$/,
-        use: [
-          devMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader'
-        ]
+        use: [devMode ? 'vue-style-loader' : MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.js$/,
@@ -148,9 +139,7 @@ let rendererConfig = {
       // },
       isBrowser: false,
       isDev: process.env.NODE_ENV !== 'production',
-      nodeModules: devMode
-        ? path.resolve(__dirname, '../node_modules')
-        : false
+      nodeModules: devMode ? path.resolve(__dirname, '../node_modules') : false
     }),
     new Webpack.HotModuleReplacementPlugin(),
     new Webpack.NoEmitOnErrorsPlugin(),
@@ -170,7 +159,7 @@ let rendererConfig = {
     alias: {
       '@': path.join(__dirname, '../src/renderer'),
       '@shared': path.join(__dirname, '../src/shared'),
-      'vue$': 'vue/dist/vue.esm.js'
+      vue$: 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.json', '.css', '.node']
   },
@@ -179,11 +168,11 @@ let rendererConfig = {
     minimize: !devMode,
     minimizer: [
       new TerserPlugin({
-        extractComments: false,
+        extractComments: false
       }),
-      new CssMinimizerPlugin(),
-    ],
-  },
+      new CssMinimizerPlugin()
+    ]
+  }
 }
 
 /**
@@ -194,7 +183,7 @@ if (devMode) {
 
   rendererConfig.plugins.push(
     new Webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+      __static: `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
     })
   )
 }
@@ -205,11 +194,13 @@ if (devMode) {
 if (!devMode) {
   rendererConfig.plugins.push(
     new CopyWebpackPlugin({
-      patterns: [{
-        from: path.join(__dirname, '../static'),
-        to: path.join(__dirname, '../dist/electron/static'),
-        globOptions: { ignore: [ '.*' ] }
-      }]
+      patterns: [
+        {
+          from: path.join(__dirname, '../static'),
+          to: path.join(__dirname, '../dist/electron/static'),
+          globOptions: { ignore: ['.*'] }
+        }
+      ]
     }),
     new Webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
